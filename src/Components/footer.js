@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import {Row,Col,Container} from 'react-bootstrap'
 import logo from "../logo/whitelogo.png";
-import whatsapp from "../social/whatsapp.svg";
+import facebook from "../social/whatsapp.svg";
 import insta from "../social/instagram.svg"
 import twitter from "../social/twitter.svg"
-import facebook from "../social/facebook.svg"
+import whatsapp from "../social/facebook.svg"
 import "../App.css"
 
 export default class footer extends Component {
@@ -13,7 +13,7 @@ export default class footer extends Component {
             <>
             <Container style={{background:"#223142",color:"white"}} fluid>
             <Row>
-              <Col xs={3}>
+              <Col xs={12} md={3}>
                 <div className="l"  style= {{width:"125px",height:"120px",paddingTop:"40px"}}>
                   <img className="pl-4 " src={logo} style={{width:"100%",height:"100%"}}/>
                   </div>
@@ -37,19 +37,21 @@ export default class footer extends Component {
               <h4 style={{fontSize:"13px",fontWeight:"normal"}}>Delivery Taxi</h4>
 
               </Col>
-              <Col className="ab" style={{fontSize:"12px",fontWeight:"normal",marginTop:"15px"}}>
+              <Col xs={12} md={3} className="ab" style={{fontSize:"12px",fontWeight:"normal",marginTop:"15px"}}>
               <h4 className="about " style={{fontSize:"15px",fontWeight:"bold",marginTop:"40px"}}>About Us</h4>
               <h4 className="mt-2 about f" style={{fontSize:"13px",fontWeight:"normal"}}>Help</h4>
               <h4 className="about f" style={{fontSize:"13px",fontWeight:"normal",}}>Custom Service</h4>
               <h4 className="about f" style={{fontSize:"13px",fontWeight:"normal"}}>Contacts</h4>
               </Col>
-              <Col className="abc" style={{marginTop:"15px"}}>
+              <Col xs={12} md={3} className="abc" style={{marginTop:"15px"}}>
               <h4 style={{fontSize:"15px",fontWeight:"bold",marginTop:"40px"}}>Contacts:</h4>
-             <div className="whatsapp">
-               <img src={facebook}className="mt-2" /> +97333505995</div><br></br>
-              <img id="tw"src={whatsapp} style={{marginTop:"-10%"}}/>
-              <img className=" ml-2" src={twitter} style={{marginTop:"-10%"}}/>
-              <img className=" ml-2 " src={insta} style={{marginTop:"-10%"}}/>
+                <ul>
+                  <li><a href="tel:+97333505995"><img id="tw"src={whatsapp}/><span className="contact_no">+97333505995</span></a></li>
+                  <li><a href="http://facebook.com"><img src={facebook} /></a></li>
+                  <li><a href="http://twitter.com"><img src={twitter} /></a></li>
+                  <li><a href="http://instagram.com"><img src={insta} /></a></li>
+                </ul>
+  
               </Col>
 
 
