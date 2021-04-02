@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Navbar,Row,Col,Nav,Badge,Card,Toast,Button,Modal,Accordion} from 'react-bootstrap'
 import delivery from "../topbar/delivery address.svg";
@@ -7,6 +7,7 @@ import img from "../xadok/pexels-photo-102104.jpeg"
 import logo from "../logo/logo.svg";
 import master from "../xadok/master.png";
 import UserLoginModal from './Modals/user_login';
+import OpenCart from './openCart';
 
 import "../App.css";
 
@@ -121,15 +122,6 @@ const TopBar=()=>{
                     <option value="ع">"ع"</option>
                     </select>
                 </div>
-                
-            {/* <div className="input-container inpu" >
-            <i class="fas fa-search icon"></i>
-            <input type="text" className="input-field input-u" 
-            placeholder="Search for anything... "   
-            style={{fontSize:"14px",background:"#F6F6F6",border:"none",
-            outline:"none",padding:"13px",
-            boxSizing:"border-box"}}/>
-            </div> */}
 
             <form className="form-inline">
               <div className="input-group">
@@ -139,22 +131,26 @@ const TopBar=()=>{
                 <input type="text" className="form-control" placeholder="Search for anything... " aria-label="Search" aria-describedby="basic-addon1"/>
               </div>
             </form>
-           
-          
-
 
             <div id="fle" className="ml-2">
             <i className="fas fa-user top-bar-icon ml-3" onClick={handleShow1}></i> 
             <i className="fas fa-shopping-cart top-bar-icon ml-2" onClick={handleShow2}><span className="product_amount">2</span></i>
             </div> 
 
-            
-         
             </Nav>
         </Navbar> 
 
         {/* -----------------Open Cart---------------------- */}
-<Modal className="cart  art" style={{border:"none",marginLeft:"63.9%",width:"510px",marginTop:"-2.5%",height:"110vh"}} show={show2} 
+        <OpenCart
+        show2={show2}
+        setShow2={setShow2}
+        setShow={setShow}
+        handleClose2={handleClose2}
+        handleShow114={handleShow114}
+        handleShow={handleShow}
+        
+        />
+{/* <Modal className="cart  art" style={{border:"none",marginLeft:"63.9%",width:"510px",marginTop:"-2.5%",height:"110vh"}} show={show2} 
 onHide={handleClose2}>
         <Modal.Header style={{border:"none"}} closeButton>
           <Modal.Title style={{border:"none",fontWeight:"bold",paddingLeft:"22px"}}>My cart 
@@ -247,7 +243,7 @@ background:"#F6F6F6",fontSize:"29px"}}>
     Checkout <span style={{fontSize:"12px"}}>(0.835 BHD)</span>
   </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
 
       {/* ---------------------------------PROMO CODE--------------------------- */}
 
