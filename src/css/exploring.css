@@ -42,6 +42,9 @@
     background-color: white;
     margin-top: -20px;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .currency-symbol{
@@ -52,13 +55,13 @@
 .item-price{
 color:  rgb(227, 66, 75);
 font-weight: bold;
-margin-top: -20px;
+/* margin-top: -20px; */
 }
 
 .discount{
-position: absolute;
+/* position: absolute;
 right: 0;
-top: 17px;
+top: 17px; */
 width:30%;
  background:#E3424B;
  font-size:12px;

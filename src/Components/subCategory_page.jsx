@@ -15,17 +15,39 @@ import Service from '../services/service';
 
 const API_PREFIX_URL=`https://deliveryxadok.s3.us-east-2.amazonaws.com/`;
 const page_size= 28;
+var xadokCartItems = [];
 
 function MyVerticallyCenteredModal(props) {
- 
-  const [num ,setNum] = useState(1);
+
+  const [num ,setNum] = useState(0);
   const plus = () => {
     setNum(num + 1);
   };
   const minus = () => {
     setNum(num - 1);
   };
- 
+
+  const [cart_quantity,setCart_quantity]=useState(0);
+
+  const addXadokCart=()=>{
+    setNum(props.cartData.pro_qua);
+     if(xadokCartItems.some((item) =>item.pro_id == props.cartData.pro_id)){
+        
+        xadokCartItems.map((value,index)=>{
+          if(value.pro_id == props.cartData.pro_id){
+            
+            value.pro_qua=value.pro_qua+1;
+        
+          }
+        })
+      }
+
+     else{
+      xadokCartItems.push({pro_id: props.cartData.pro_id, pro_name: props.cartData.pro_name_en, pro_qua: 1, pro_model: 0, product_price: ((props.cartData.pro_special_price == 0 || props.cartData.pro_special_price =='') ? props.cartData.pro_price : props.cartData.pro_special_price ), img: API_PREFIX_URL+props.cartData.pro_img, offer_price: props.cartData.pro_special_price, offer_percent: 0, offer_info: props.cartData.pro_desc_en});
+      setCart_quantity(cart_quantity+1);
+    }
+    localStorage.setItem('xadokCartItems', JSON.stringify(xadokCartItems));
+  }
 
   return(
     <Modal show={props.show} onHide={props.onHide} className="modal-box">
@@ -52,7 +74,7 @@ function MyVerticallyCenteredModal(props) {
                         <i className="fa fa-minus" aria-hidden="true"></i>
                       </button>
                     </div>
-                    <input className="input-group-field" type="number" name="quantity" value={num} />
+                    <input className="input-group-field" type="number" name="quantity" value={props.cartData.pro_qua} />
                     <div className="input-group-button">
                       <button type="button" className="sign-btn hollow plus" data-quantity="plus" data-field="quantity" onClick={plus}>
                         <i className="fa fa-plus" aria-hidden="true"></i>
@@ -60,10 +82,9 @@ function MyVerticallyCenteredModal(props) {
                     </div>
                   </div>
 
-                  <button className="modal_addcart_btn"><i className="fas fa-shopping-cart mr-2"></i> Add to cart  </button>
+                  <button className="modal_addcart_btn" onClick={addXadokCart}><i className="fas fa-shopping-cart mr-2"></i> Add to cart  </button>
                   <i class="fas fa-heart favourite-icon"></i>
                 </div>
-
               </Col>
             </Row>
 
@@ -285,19 +306,20 @@ export default function Explore(props) {
       pro_id:"",
       user_id:""
     }
-
-    let product_Category_Param={
-      shop_id:  Params.shop_id,
-      procat_id : Params.prod_cat,
+    
+      const product_Category_Param={
+      shop_id: Params.shop_id,
+      procat_id : Params.cat_id,
       page_no : page,
-      page_size: page_size
+      page_size: page_size,
     }
 
-    let sidebar_subcat_Params={
-      shop_id:  Params.shop_id,
-      procat_sub : Params.subcat_id,
-      page_no : page,
-      page_size: page_size
+    const sub_category_Params={
+      shop_id: Params.shop_id,
+      procat_sub: Params.subcat_id,
+      page_size: page_size,
+      page_no: page
+  
     }
 
     const [category, setCategory]=useState([]);
@@ -314,19 +336,19 @@ export default function Explore(props) {
     //   lng:50.5156726
     // }
 
-    const [sidebar_sub_cat,setSidebar_sub_cat]=useState([]);
+    // const [sidebar_sub_cat,setSidebar_sub_cat]=useState([]);
     const [subcat_list,setsubcat_list]=useState([]);
     const [subcat_filterbtn, setsubcat_filterbtn]=useState([]);
     const [allsubcat_data,setAllsubcat_data]=useState([]);
+    const [subtitle,setSubtitle]=useState("");
 
     const [filter_subcatID, setFilter_subcatID]=useState(0);
+    // let xadokCartItems = [];
+    // let count = 0;
 
-    const filterbtn_subcat_Param={
-      shop_id: Params.shop_id,
-      procat_id : Params.cat_id,
-      page_no : 1,
-      page_size: page_size
-    }
+    // const addXadokCart=()=>{
+    //   xadokCartItems.push({pro_id: data.pro_id, pro_name: data.pro_name_en, pro_qua: count, pro_model: 0, product_price: ((data.pro_special_price != 0 || data.pro_special_price !='') ? data.pro_special_price : data.pro_price), img: API_PREFIX_URL+data.pro_img, offer_price: data.pro_special_price, offer_percent: 0, offer_info: data.pro_desc_en});
+    // }
 
     const handleAddCart=(data)=>{
 
@@ -342,57 +364,59 @@ export default function Explore(props) {
       }
 
       // console.log("modal param",modal_Param)
-      // axios.post('https://ristsys.store/api/GetProductInfo', modal_Param)
-      // .then(response=>{
-      //   // console.log("cart data api",response.data.data.product)
-      //   // console.log("cart alternative product api",response.data.data.alternatives)
-      //   setCartData(response.data.data.product);
-      //   setSlide_product(response.data.data);
-      //   // setAlternative_Product(response.data.data.alternatives);
-      //   // setCartSimilar_Product(response.data.data.related);
-      //   alternate_list=[];
-      //   var j = 0;
-      //   for (
-      //     let index = 0;
-      //     index < Math.round(response.data.data.alternatives.length / 5);
-      //     index++
-      //   ) {
-      //     var k = [];
-      //     for (let i = 0; i < 5; i++) {
-      //       if (typeof response.data.data.alternatives[j] === undefined) {
-      //       } else {
-      //         k.push(response.data.data.alternatives[j]);
-      //         j++;
-      //       }
-      //     }
-      //     alternate_list[index] = k;
-      //   }
-      //   setAlternative_Product(alternate_list);
+      axios.post('https://ristsys.store/api/GetProductInfo', modal_Param)
+      .then(response=>{
+        // console.log("cart data api",response.data.data.product)
+        // console.log("cart alternative product api",response.data.data.alternatives)
+        setCartData(response.data.data.product);
+        setSlide_product(response.data.data);
+        // setAlternative_Product(response.data.data.alternatives);
+        // setCartSimilar_Product(response.data.data.related);
+        alternate_list=[];
+        var j = 0;
+        for (
+          let index = 0;
+          index < Math.round(response.data.data.alternatives.length / 5);
+          index++
+        ) {
+          var k = [];
+          for (let i = 0; i < 5; i++) {
+            if (typeof response.data.data.alternatives[j] === undefined) {
+            } else {
+              k.push(response.data.data.alternatives[j]);
+              j++;
+            }
+          }
+          alternate_list[index] = k;
+        }
+        setAlternative_Product(alternate_list);
 
-      //   similar_list=[];
-      //   var m = 0;
-      //   for (
-      //     let index = 0;
-      //     index < Math.round(response.data.data.related.length / 5);
-      //     index++
-      //   ) {
-      //     var n = [];
-      //     for (let i = 0; i < 5; i++) {
-      //       if (typeof response.data.data.related[m] === undefined) {
-      //       } else {
-      //         n.push(response.data.data.related[m]);
-      //         m++;
-      //       }
-      //     }
-      //     similar_list[index] = n;
-      //   }
-      //   setCartSimilar_Product(similar_list);
+        similar_list=[];
+        var m = 0;
+        for (
+          let index = 0;
+          index < Math.round(response.data.data.related.length / 5);
+          index++
+        ) {
+          var n = [];
+          for (let i = 0; i < 5; i++) {
+            if (typeof response.data.data.related[m] === undefined) {
+            } else {
+              n.push(response.data.data.related[m]);
+              m++;
+            }
+          }
+          similar_list[index] = n;
+        }
+        setCartSimilar_Product(similar_list);
        
-      // })
-      // .catch(error=>
-      //   console.log(error)
-      // )
+      })
+      .catch(error=>
+        console.log(error)
+      )
 
+      // xadokCartItems.push({pro_id: data.pro_id, pro_name: data.pro_name_en, pro_qua: count, pro_model: 0, product_price: ((data.pro_special_price != 0 || data.pro_special_price !='') ? data.pro_special_price : data.pro_price), img: API_PREFIX_URL+data.pro_img, offer_price: data.pro_special_price, offer_percent: 0, offer_info: data.pro_desc_en});
+      // addXadokCart(xadokCartItems);
      
     }
 
@@ -401,28 +425,7 @@ export default function Explore(props) {
     const displaySubCategory=(prod_cat)=>{
      setPage(1);
      setAppState({loading:true});
-    //  const categoryProducts = Service.GetCategoryProducts(prod_cat,page,shopID);
-    //  console.log("Product category",categoryProducts)
-      product_Category_Param={
-        shop_id: shopID,
-        procat_id : prod_cat,
-        page_no : page,
-        page_size: page_size
-      }
-
-      axios.post('https://ristsys.store/api/GetShopProducts', product_Category_Param)
-      .then(response=>{
-        setAppState({loading:false,res:response});
-        console.log("sidebar cat subcat products api",response.data.data);
-        setLoadMore(true);
-        setProduct_subcategory(response.data.subs);
-        setsubcat_list(response.data.data);
      
-      })
-
-      .catch(error=>{
-        console.log(error)
-      })
     } 
 
  const shop_Params={
@@ -430,63 +433,70 @@ export default function Explore(props) {
   user_id: ""
  }
 
- const nav_category_Params={
-   shop_id: Params.shop_id,
-   procat_id: Params.cat_id,
-   page_no: page,
-   page_size: page_size
-
- }
 
 const [appState, setAppState] = useState({loading:false, res:null});
 
-const GetShopSubCategoryProducts=(shop_ID,procat_ID,pageNo,pageSize)=>{
-
-  let sub_category_Params={
-    shop_ID: shop_ID,
-    procat_sub: procat_ID,
-    page_size: pageSize,
-    page_no: pageNo
-
-  }
-
-  console.log("navcat params",sub_category_Params)
-  axios.post('https://ristsys.store/api/GetShopSubCategoryProducts', sub_category_Params)
-  .then(response=>{
-    // console.log("subcategory api",response.data.data);
-    // console.log("subcat_paramsss", sidebar_subcat_Params);
-    // if(response.data.data != null){
-    //   setSidebar_sub_cat(response.data.data);
-    //   setsubcat_list(response.data.data);
-    // }
-    console.log("nav sub cats response", response);
-    return response;
-
-      
-  })
-
-  .catch(error=>{
-    console.log(error)
-  })
-}
     useEffect(()=>{
 
-    //  const shopPage_response = Service.ShopPage(Params.shop_id);
-    //  console.log(shopPage_response)
-    //  if(shopPage_response.status===1){
-      // setShops(shopPage_response.data.data.shop);
-    //  }
     setAppState({loading:true});
     axios.post('https://ristsys.store/api/shopPage',shop_Params)
     .then(response=>{
+
+      if(response.status===0){
+        setLoadMore(false);
+      }
       setAppState({loading:false,res:response});
       setShops(response.data.data.shop);
       setCategory(response.data.data.category);
     })
+
     .catch(error=>{
       console.log(error);
     });
+        
+    if(Params.subcat_id==0){
+      setAppState({loading:true});
+      axios.post('https://ristsys.store/api/GetShopProducts', product_Category_Param)
+      .then(response=>{
+        setAppState({loading:false,res:response});
+        if(response.status===0){
+          setLoadMore(false);
+        }
+        console.log("sidebar cat subcat products api",response.data.data);
+        setLoadMore(true);
+        setProduct_subcategory(response.data.subs);
+        setsubcat_filterbtn(response.data.subs);
+        setsubcat_list(response.data.data);
+        setAllsubcat_data(response.data.data);
+     
+    
+      })
 
+      .catch(error=>{
+        console.log(error)
+      })
+    }
+
+    else if(Params.subcat_id!==0){
+      setAppState({loading:true});
+      axios.post('https://ristsys.store/api/GetShopSubCategoryProducts', sub_category_Params)
+      .then(response=>{
+        if(response.status===0){
+          setLoadMore(false);
+        }
+        
+        setsubcat_list(response.data.data);
+        setSubtitle("");
+    
+          
+      })
+    
+      .catch(error=>{
+        console.log(error)
+      })
+    }
+
+   
 
 
     // const nav_sub_Cat = GetShopSubCategoryProducts(Params.shop_id,Params.subcat_id,page_size,page);
@@ -557,8 +567,11 @@ const GetShopSubCategoryProducts=(shop_ID,procat_ID,pageNo,pageSize)=>{
   //       console.log(error)
   //     })
 
-    },[setAppState])
+    },[setAppState,Params])
 
+    const filter_btns = localStorage.getItem('filter_buttons') === 'true';
+
+    console.log("filter btns", filter_btns)
 
   const FilterButtons=()=>{
     
@@ -567,7 +580,20 @@ const GetShopSubCategoryProducts=(shop_ID,procat_ID,pageNo,pageSize)=>{
         {subcat_filterbtn && subcat_filterbtn.length && subcat_filterbtn.map((value,index)=>{
 
           return(
-          
+         
+
+          <Link
+          to={
+            "/" +
+            Params.shop_name +
+            "/" +
+            Params.shop_id +
+            "/" +
+            value.procat_id +"/"+
+            value.procat_name_en+"/"+
+            value.procat_id
+          }
+          style={{ textDecoration: "none" }}>
             <Button
             aria-pressed="true" 
             className="filter_btn mb-4"
@@ -575,7 +601,8 @@ const GetShopSubCategoryProducts=(shop_ID,procat_ID,pageNo,pageSize)=>{
             onClick={()=>subCategoryItems(value.procat_id)}>
               {value.procat_name_en}
             </Button>
-      
+          </Link>
+        
           );
         })}
       </>
@@ -585,17 +612,15 @@ const GetShopSubCategoryProducts=(shop_ID,procat_ID,pageNo,pageSize)=>{
 const subCategoryItems=(passedID)=>{
   setLoadMore(true);
   setPage(1);
-  setFilter_subcatID(passedID);
-
 
    if(passedID !=="All"){
-
-  const  filter_btn_Param={
-      shop_id:  Params.shop_id,
-      procat_sub : passedID,
-      page_no : page,
-      page_size: page_size
-    }
+  
+  // const  filter_btn_Param={
+  //     shop_id:  Params.shop_id,
+  //     procat_sub : passedID,
+  //     page_no : page,
+  //     page_size: page_size
+  //   }
 
 
     // axios.post('https://ristsys.store/api/GetShopSubCategoryProducts', filter_btn_Param)
@@ -624,7 +649,9 @@ const subCategoryItems=(passedID)=>{
    }
 
    else{
+
      setsubcat_list(allsubcat_data);
+     setSubtitle("All");
    }
 
 }
@@ -669,7 +696,7 @@ function loadItems(){
 
     setTimeout(() => {
 
-      // axios.post('https://ristsys.store/api/GetShopProducts', updated_nav_category_Params)
+      // axios.post('https://ristsys.store/api/GetShopProducts', updated_sidebar_subcat_Params)
       // .then(response=>{
       //   if(response.status==0){
       //     setLoadMore(false);
@@ -741,45 +768,46 @@ function loadItems(){
             loader={<div className="loader" key={0}>
              <Loader className="text-center" type="TailSpin" color="#e3424b" height={80} width={80} />
             </div>}
-
-            // useWindow={false}
             className="d-flex flex-wrap"
         >
+          {/* {subcat_list.length==0 &&
+    
+            <Loader className="text-center" type="TailSpin" color="#e3424b" height={80} width={80}></Loader>
+
+          } */}
 
 
         {subcat_list!==null && subcat_list.length>0 && subcat_list.map((value,index)=>{
      
-        if(value!==null){
+          if(value!==null){
 
-      
-          if(value.pro_special_price!=null && value.pro_special_price==0.000){
-             recentPrice = value.pro_price;
-             prevPrice="";
-          }
-          else{
-             recentPrice = value.pro_special_price;
-             prevPrice= value.pro_price;
-          }
-          return(
-            
-          <Col key={index} sm={6} md={4} lg={3} xl={3} className="item similar-item">
-            <div className="item-image">
-            <Image src={`${API_PREFIX_URL}${value.pro_img}`} />
-            </div>
-              
-              <div  className="price-box">
-                  <p className="pl-2 old-price"><del>{prevPrice}</del></p>
-                  <h4 className="pl-2 item-price">{recentPrice}<span className="currency-symbol">BDH</span></h4>
-                  <div className="discount" >
-                      <p className="pt-1 pl-3 ptag">25%</p>
-                  </div>
+        
+            if(value.pro_special_price!=null && value.pro_special_price==0.000){
+              recentPrice = value.pro_price;
+              prevPrice="";
+            }
+            else{
+              recentPrice = value.pro_special_price;
+              prevPrice= value.pro_price;
+            }
+            return(
+            <Col key={index} sm={6} md={4} lg={3} xl={3} className="item similar-item">
+              <div className="item-image">
+              <Image src={`${API_PREFIX_URL}${value.pro_img}`} />
               </div>
-          
-              <p className="item-description">{value.pro_name_en}</p>
-              <button className="addcart_btn" onClick={()=>handleAddCart(value)}><i className="fas fa-shopping-cart mr-2"></i> Add to cart  </button>
-            </Col>  
-         );
-        }
+              <p className="pl-2 old-price"><del>{prevPrice}</del></p>
+                <div  className="price-box">
+                    <h4 className="pl-2 item-price">{recentPrice}<span className="currency-symbol">BDH</span></h4>
+                    <div className="discount" >
+                        <p className="pt-1 pl-3 ptag">25%</p>
+                    </div>
+                </div>
+            
+                <p className="item-description">{value.pro_name_en}</p>
+                <button className="addcart_btn" onClick={()=>handleAddCart(value)}><i className="fas fa-shopping-cart mr-2"></i> Add to cart  </button>
+              </Col>  
+          );
+          }
         })}
 
        
@@ -798,6 +826,7 @@ function loadItems(){
             alternative_Product={alternative_Product}
             cartSimilar_Product={cartSimilar_Product}
             slide_product={slide_product}
+            // xadokCartItems={xadokCartItems}
           />
       <Row>
    
@@ -819,22 +848,20 @@ function loadItems(){
               <Accordion defaultActiveKey="0" onClick={()=>displaySubCategory(value.procat_id)}>
                 <Card>
                   <Card.Header>
-                    <Link
-                         to={
-                          "/" +
-                          Params.shop_name +
-                          "/" +
-                          Params.shop_id +
-                          "/" +
-                          Params.cat_name+ 
-                          "/"+
-                          value.procat_id +
-                          "?subcat_name=" +
-                          value.name+
-                          "?sub_id=" +
-                          ""
-                        }
-                        style={{ textDecoration: "none" }}>
+                  <Link
+                     to={
+                      "/" +
+                      Params.shop_name +
+                      "/" +
+                      Params.shop_id +
+                      "/" +
+                      value.procat_id +
+                      "/"+
+                      value.name+
+                      "/" +
+                      " 0"
+                    }
+                    style={{ textDecoration: "none" }}>
                     <Accordion.Toggle as={Button} variant="link" eventKey="1">
                       <Image src={`${API_PREFIX_URL}${value.procat_img}`} />{value.name}
                     </Accordion.Toggle>
@@ -855,10 +882,9 @@ function loadItems(){
                             Params.shop_id +
                             "/" +
                             value.procat_id +
-                            "?subcat_name=" +
+                            "/"+
                             sub_cat.procat_name_en+
-                            
-                            "?sub_id=" +
+                            "/"+
                             sub_cat.procat_id
                           }
                           style={{ textDecoration: "none" }}><li> {sub_cat.procat_name_en}</li>
@@ -904,13 +930,16 @@ function loadItems(){
        </Row>
 
        <Row>
-       <h2 className="explore-sub-title mb-4">{Params.subcat_name}</h2>
+       
+       <h2 className="explore-sub-title mb-4">{subtitle==""? Params.subcat_name:"All"}</h2>
           <Col xs={12} sm={12} lg={12}>
                 <div className={`btn-container d-flex flex-wrap`}>
-                  <Button className="filter_btn mb-4"
-                    onClick={()=>subCategoryItems("All")}>
-                      All
-                  </Button>
+   
+                <Button className="filter_btn mb-4"
+                  onClick={()=>subCategoryItems("All")}>
+                    All
+                </Button>
+     
                   <FilterButtons />
                 </div>
           </Col>

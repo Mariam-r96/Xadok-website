@@ -6,6 +6,7 @@
   background: none !important;
 
 }
+
 .explore-banner img{
     max-width: 10%;
   }
@@ -18,7 +19,8 @@
     font-size: 29px;
   }
   .explore-banner{
-    background-size: 100% 100%;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
       min-height: 38vh;
       margin-top: 3.5%;
       display: flex;
@@ -224,11 +226,12 @@
   }
   
   .alternative-item .priceBox{
-      background-color: white;
-      position: relative;
-      display: flex;
-      align-items: center;
-      margin-top: -20px;
+    background-color: white;
+    margin-top: -20px;
+    /* position: relative; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   
   .alternative-item .currency-symbol{
@@ -246,8 +249,8 @@
     padding: 22px;
   }
   .alternative-item .discount{
-  position: absolute;
-  right: 0;
+  /* position: absolute;
+  right: 0; */
   /* top: 17px; */
   width:30%;
    background:#E3424B;
