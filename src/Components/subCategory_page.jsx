@@ -19,7 +19,7 @@ var xadokCartItems = [];
 
 function MyVerticallyCenteredModal(props) {
 
-  const [num ,setNum] = useState(0);
+  const [num ,setNum] = useState(1);
   const plus = () => {
     setNum(num + 1);
   };
@@ -28,25 +28,34 @@ function MyVerticallyCenteredModal(props) {
   };
 
   const [cart_quantity,setCart_quantity]=useState(0);
-
+  
   const addXadokCart=()=>{
-    setNum(props.cartData.pro_qua);
+  
      if(xadokCartItems.some((item) =>item.pro_id == props.cartData.pro_id)){
         
         xadokCartItems.map((value,index)=>{
           if(value.pro_id == props.cartData.pro_id){
             
-            value.pro_qua=value.pro_qua+1;
+            value.pro_qua = value.pro_qua+1;
+            // value.pro_qua=num+1;
+            // setNum(value.pro_qua);
         
           }
         })
       }
 
      else{
-      xadokCartItems.push({pro_id: props.cartData.pro_id, pro_name: props.cartData.pro_name_en, pro_qua: 1, pro_model: 0, product_price: ((props.cartData.pro_special_price == 0 || props.cartData.pro_special_price =='') ? props.cartData.pro_price : props.cartData.pro_special_price ), img: API_PREFIX_URL+props.cartData.pro_img, offer_price: props.cartData.pro_special_price, offer_percent: 0, offer_info: props.cartData.pro_desc_en});
-      setCart_quantity(cart_quantity+1);
+      xadokCartItems.push({pro_id: props.cartData.pro_id, pro_name: props.cartData.pro_name_en, pro_qua: num, pro_model: 0, product_price: ((props.cartData.pro_special_price == 0 || props.cartData.pro_special_price =='') ? props.cartData.pro_price : props.cartData.pro_special_price ), img: API_PREFIX_URL+props.cartData.pro_img, offer_price: props.cartData.pro_special_price, offer_percent: 0, offer_info: props.cartData.pro_desc_en});
+      let qty=cart_quantity+1;
+      setCart_quantity(qty);
+      setNum(1);
+      // setNum(props.cartData.pro_qua);
     }
+   
     localStorage.setItem('xadokCartItems', JSON.stringify(xadokCartItems));
+    localStorage.setItem('cart_quantity', JSON.stringify(cart_quantity));
+
+    localStorage.setItem('modal_cart_quantity', JSON.stringify(num));
   }
 
   return(
@@ -74,7 +83,7 @@ function MyVerticallyCenteredModal(props) {
                         <i className="fa fa-minus" aria-hidden="true"></i>
                       </button>
                     </div>
-                    <input className="input-group-field" type="number" name="quantity" value={props.cartData.pro_qua} />
+                    <input className="input-group-field" type="number" name="quantity" value={num} />
                     <div className="input-group-button">
                       <button type="button" className="sign-btn hollow plus" data-quantity="plus" data-field="quantity" onClick={plus}>
                         <i className="fa fa-plus" aria-hidden="true"></i>
@@ -833,7 +842,7 @@ function loadItems(){
       <Col className="menu-icon" sm={1} xs={1}>
         <i className="fas fa-bars" onClick={expandMenu}></i>
       </Col>
-      <Col sm={2} lg={2} className="sideNav subcategory-nav">
+      <Col sm={3} lg={3} className="sideNav subcategory-nav">
       
       <Navbar.Brand href="/" className="pt-2 logo" style={{ width: "100%" }}>
           <Image src={logo} className="logo-img" style={{ height: "10vh" }} />
@@ -913,7 +922,7 @@ function loadItems(){
       
      </div>
 
-       <Col xs={10} sm={10} lg={10} fluid>
+       <Col xs={9} sm={9} lg={9} fluid>
        <TopBar />
 
        <Row>
