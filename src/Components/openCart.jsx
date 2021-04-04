@@ -1,5 +1,6 @@
 import React,{useState} from 'react';
-import {Button,Modal} from 'react-bootstrap'
+import {Button,Modal} from 'react-bootstrap';
+import '../css/openCart.css';
 
 
 const API_PREFIX_URL=`https://deliveryxadok.s3.us-east-2.amazonaws.com/`;
@@ -99,21 +100,24 @@ const OpenCart=(props)=>{
     };
 
     const cart_items = JSON.parse(localStorage.getItem('xadokCartItems'));
+    const cart_qty = (localStorage.getItem('cart_quantity'));
+    const modal_cart_qty = (localStorage.getItem('modal_cart_quantity'));
 
     return(
+      <div className="open-cart-modal">
     
-            <Modal className="cart  art" style={{border:"none",marginLeft:"63.9%",width:"510px",marginTop:"-2.5%",height:"110vh"}} show={props.show2} 
+            <Modal className="cart  art" style={{border:"none"}} show={props.show2} 
 onHide={props.handleClose2}>
         <Modal.Header style={{border:"none"}} closeButton>
-          <Modal.Title style={{border:"none",fontWeight:"bold",paddingLeft:"22px"}}>My cart 
-          <span style={{fontSize:"18px",fontWeight:"normal"}}>&nbsp;(2 items)
+          <Modal.Title style={{border:"none",fontWeight:"bold"}}>My cart 
+          <span>&nbsp;{`(${cart_qty} items)`}
             </span></Modal.Title>
         </Modal.Header>
         <Modal.Body style={{border:"none"}}>
        
-        <h6 style={{color:"red",fontSize:"12px",fontWeight:"bold",paddingLeft:"22px"}}>DELIVER TO </h6>
+        <h6 style={{color:"red",fontSize:"12px",fontWeight:"bold"}}>DELIVER TO </h6>
         <h6 className="post" onClick={props.handleShow} 
-         style={{position:"relative",paddingLeft:"22px",
+         style={{position:"relative",
          cursor: "pointer"}} >300 Post Street San Francisco, CA 
         <span style={{color:"silver",position:"absolute",right:"0",marginTop:"-2%"}}><i class="fas fa-chevron-right"></i></span></h6>
 
@@ -131,7 +135,7 @@ onHide={props.handleClose2}>
         borderBottom:"1px solid silver"}}>
           <div style={{width:"70px",height:"70px"}}>
             <img   className="item-img" src={value.img} style={{width:"100%",height:"100%"
-          ,marginLeft:"40%"}}/>
+          }}/>
           </div>
           <div>
               <h5  className="item"style={{marginTop:"-8%"}}>{value.pro_name}</h5>
@@ -149,6 +153,7 @@ onHide={props.handleClose2}>
        borderTopLeftRadius:"12px"}} >+</Button>
       <Button style={{border:"none",color:"black",marginTop:"9%",
      background:"white"}}>{value.pro_qua}</Button>
+     {/* background:"white"}}>{modal_cart_qty>1 ? modal_cart_qty : value.pro_qua}</Button> */}
        <Button onClick={minus}  style={{background:"#F6F6F6",
        color:"gray",marginTop:"7%",
        fontWeight:"bold",width:"40px",
@@ -162,7 +167,7 @@ onHide={props.handleClose2}>
     );
 })}
       <h6   className="item-add"style={{fontSize:"20px",position:"absolute",
-      left:"5%",paddingLeft:"22px",paddingTop:"70px",color:"black"}
+      left:"5%",paddingTop:"70px",color:"black"}
       }>+ Add more items</h6>
         
         <div  className="item-addb"
@@ -206,6 +211,7 @@ background:"#F6F6F6",fontSize:"29px"}}>
   </Button>
         </Modal.Footer>
       </Modal>
+      </div>
 
     );
 }
