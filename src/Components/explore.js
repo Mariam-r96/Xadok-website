@@ -530,7 +530,7 @@ export default function Explore(props) {
       return(
         <React.Fragment>
         {similarProd && similarProd.length>0 && similarProd.map((value,index)=>{
-          // console.log("similar prod value",value)
+
           if(value.pro_special_price==0.000){
              recentPrice = value.pro_price;
              prevPrice="";
