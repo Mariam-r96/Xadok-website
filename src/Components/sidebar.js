@@ -170,10 +170,12 @@ export default function Sidebar() {
           const gallery_url=`https://deliveryxadok.s3.us-east-2.amazonaws.com/${value.gallery[0].gallery_image}`;
           return(
            
-              <Col key={index} sm={5} md={4} lg={4} xl={2}
-              className="shop-card mr-4 mb-4" 
+              <Col key={index} sm={12} md={4} lg={4} xl={4}
+              className="shop-card mb-4" 
               style={{
                 background: `url(${gallery_url})`,
+                backgroundSize: "cover",
+               
               }}
               >
                 <Link to={{
@@ -258,7 +260,7 @@ export default function Sidebar() {
             </Col>
          </Row>
 
-         <Row className="mt-4 ml-1">
+         <Row className=" mt-4 ml-1">
             <DisplayShops/>
          </Row>
           </Col>
